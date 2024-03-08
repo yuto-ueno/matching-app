@@ -19,7 +19,7 @@ const Home = (props) => {
 
             })
             .catch(error => {
-                // console.error('Error');
+                console.error('Error');
             });
         }, [props.cookies]);
 

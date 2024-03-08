@@ -4,13 +4,12 @@ import {Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/ma
 import { apiURL } from '../App'
 import {withCookies} from "react-cookie";
 
-const Auth = (props) => {
-
+// ユーザーの新規登録
+const CreateUser = (props) => {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
-    const [ loginFunction, setLoginFunction ] = useState(true);
 
-    const auth = (event) => {
+    const createUser = (event) => {
         event.preventDefault();
 
         let form_data = new FormData();
@@ -18,29 +17,34 @@ const Auth = (props) => {
         form_data.append('email', email);
         form_data.append('password', password);
 
-        const postUri = loginFunction ? `${apiURL}/authen/jwt/create` : `${apiURL}/api/users/create`;
+        const postUri = `${apiURL}/api/users/create`;
 
         axios.post(postUri, form_data, {
             headers: {
                 'Content-Type': 'application/json'
             },
         })
-
         .then( response => {
-            props.cookies.set('token', response.data.access)
-            window.location.href="/home";
+            // 認証
+            const certificationUri = `${apiURL}/authen/jwt/create`;
+            axios.post(certificationUri, form_data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then( response => {
+                    props.cookies.set('token', response.data.access)
+                    console.log("success")
+                    window.location.href="/profile";
+                })
+                .catch( () => {
+                    console.log("certification error");
+                });
+
         })
-
         .catch( () => {
-          console.log("error")
-          alert("EmailかPasswordが違います");
+          console.log("error");
         });
-  }
-
-  const changeFunction = () => {
-    setLoginFunction(!loginFunction)
-    setEmail("")
-    setPassword("")
   }
 
   return(
@@ -54,10 +58,10 @@ const Auth = (props) => {
       >
 
         <Typography component="h2" variant="h5">
-          {loginFunction ? 'ログイン' : '新規登録'}
+          新規登録
         </Typography>
 
-        <Box component="form" noValidate sx={{mt:1}} onSubmit={auth}>
+        <Box component="form" noValidate sx={{mt:1}} onSubmit={createUser}>
           <TextField
               margin="normal"
               required
@@ -89,14 +93,16 @@ const Auth = (props) => {
               variant="contained"
               sx={{mt:3, mb:2}}
           >
-              {loginFunction ? 'ログイン' : 'サインイン'}
+              新規登録
           </Button>
 
-          <Grid item>
-              <Link to="#" variant="body2" onClick={changeFunction} style={{ cursor: 'pointer' }}>
-                {loginFunction ? '新規登録' : 'ログイン'}
-              </Link>
-          </Grid>
+          <Button variant="text" href="/login" sx={{ mt: 1 }}>
+            ログインはこちら
+          </Button>
+
+          <Typography component="h2" variant="h5">
+          パスワードは8文字以上、同じメールアドレスはだめ。あとで、エラーが起きないような工夫をする！
+          </Typography>
 
         </Box>
 
@@ -106,4 +112,4 @@ const Auth = (props) => {
 
  }
 
-export default withCookies(Auth)
+export default withCookies(CreateUser)
