@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Auth  from './components/Auth';
+import Home  from './components/Home';
+import { CookiesProvider, withCookies} from 'react-cookie';
+import Header from "./components/Header";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export const apiURL = 'http://127.0.0.1:8000';
+
+const App = () => {
+    return(
+        <>
+            <Router>
+                <Header />
+                <CookiesProvider>
+                    <Routes>
+                        <Route path="/" element={<Auth />} />
+                        <Route path="home" element={<Home />} />
+                    </Routes>
+                </CookiesProvider>
+            </Router>
+        </>
+    )
 }
 
-export default App;
+export default withCookies(App)
