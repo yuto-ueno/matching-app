@@ -43,13 +43,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE,
                                 related_name='profile')
+    last_name = models.CharField("姓", default="", max_length=100)
+    first_name = models.CharField("名", default="", max_length=100)
     is_kyc = models.BooleanField("本人確認", default=False)
     age = models.PositiveSmallIntegerField(
         "年齢",
         default=20,
         validators=[
             MinValueValidator(18, "18歳未満は登録できません"),
-            MaxValueValidator(100, "100歳以上は登録できません")
+            MaxValueValidator(35, "36歳以上は登録できません")
         ]
     )
     SEX = [('male', '男性'), ('female', '女性')]

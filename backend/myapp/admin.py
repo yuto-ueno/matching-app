@@ -13,7 +13,8 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'is_kyc', 'age', 'sex', 'elementary_school', 'middle_school', 'high_school', 'university', )
+    list_display = ('user', 'last_name', 'first_name', 'is_kyc', 'age', 'sex', 'elementary_school',
+                    'middle_school', 'high_school', 'university', )
 
 
 class GoOutAdmin(admin.ModelAdmin):

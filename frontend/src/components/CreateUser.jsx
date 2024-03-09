@@ -35,7 +35,7 @@ const CreateUser = (props) => {
                 .then( response => {
                     props.cookies.set('token', response.data.access)
                     console.log("success")
-                    window.location.href="/profile";
+                    window.location.href="/profile/create";
                 })
                 .catch( () => {
                     console.log("certification error");

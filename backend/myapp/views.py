@@ -9,11 +9,13 @@ from .models import CustomUser, Profile, GoOut, Matching, DirectMessage
 from .serializers import UserSerializer, ProfileSerializer, GoOutSerializer, MatchingSerializer, DirectMessageSerializer
 
 
+# ユーザー登録
 class CreateUserView(CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
 
 
+# 自分のユーザー情報の取得と更新
 class UserView(RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
@@ -22,6 +24,7 @@ class UserView(RetrieveUpdateAPIView):
         return self.queryset.filter(id=self.request.user.id)
 
 
+# 自分のプロフィールのCRUD処理
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -45,6 +48,7 @@ class ProfileViewSet(ModelViewSet):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
+# 自分のプロフィールの表示
 class MyProfileListView(RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -53,15 +57,23 @@ class MyProfileListView(RetrieveUpdateAPIView):
         return self.queryset.filter(user=self.request.user)
 
 
+# 他の人のプロフィールの表示
+class OtherProfileViewSet(ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+    allowed_methods = ('GET',)
+
+    def get_queryset(self):
+        return self.queryset.exclude(pk=self.request.user.pk)
+
+
 class GoOutViewSet(ModelViewSet):
     queryset = GoOut.objects.all()
     serializer_class = GoOutSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        return super().get_queryset().filter(go_out=True)
 
 
 class MatchingViewSet(ModelViewSet):

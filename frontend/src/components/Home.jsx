@@ -5,8 +5,7 @@ import { apiURL } from '../App';
 import {Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/material'
 
 const Home = (props) => {
-
-    const [list, setList] = useState([]);
+    const [myProfileList, setMyProfileList] = useState([]);
 
     useEffect(() => {
         axios.get(`${apiURL}/api/profiles`, {
@@ -15,7 +14,7 @@ const Home = (props) => {
                 }
             })
             .then(res => {
-                setList(res.data);
+                setMyProfileList(res.data);
 
             })
             .catch(error => {
@@ -25,22 +24,42 @@ const Home = (props) => {
 
     return (
         <div>
-            <h1>Profiles</h1>
+            <h1>Home</h1>
             <div>
-                {list.map((profile, index)=>(
+                {myProfileList.map((profile, index) => (
                     <div key={index}>
-                        <p>age: {profile.age}</p>
-                        <p>university: {profile.university}</p>
+                        <p>こんにちは{profile.last_name} {profile.first_name}さん</p>
                     </div>
                 ))}
             </div>
-            <button>外出ボタン</button>
-            <div>散歩中です</div>
-            <div>友達と遭遇しました</div>
-            <button>メッセージ画面</button>
-            <div>今日は誰とも会いませんでした</div>
+
+            <Link href="/profile/edit">
+                <Button>プロフィールの編集</Button>
+            </Link>
+            <br/>
+
+            <Link href="/select">
+                <Button>仲間探し</Button>
+            </Link>
+            <br/>
+
+            <Link href="/favorite">
+                <Button>LIKEした人</Button>
+            </Link>
+            <br/>
+
+            <Link href="/dm">
+                <Button>DM</Button>
+            </Link>
+            <br/>
+
+            <Link href="/login">
+                <Button>ログアウト</Button>
+            </Link>
+            <br/>
+
         </div>
-);
+    );
 }
 
 export default withCookies(Home);

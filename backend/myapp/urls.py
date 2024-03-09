@@ -2,8 +2,9 @@ from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from .views import (CreateUserView,
                     UserView,
-                    MyProfileListView,
                     ProfileViewSet,
+                    MyProfileListView,
+                    OtherProfileViewSet,
                     GoOutViewSet,
                     MatchingViewSet,
                     DirectMessageViewSet,
@@ -13,6 +14,7 @@ app_name = 'myapp'
 
 router = DefaultRouter()
 router.register('profiles', ProfileViewSet)
+router.register('others', OtherProfileViewSet)
 router.register('goout', GoOutViewSet)
 router.register('favorite', MatchingViewSet)
 router.register('dm-message', DirectMessageViewSet)
