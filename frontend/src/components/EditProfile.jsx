@@ -18,7 +18,7 @@ const EditProfile = (props) => {
     const [university, setUniversity] = useState("");
 
     useEffect(() => {
-        axios.get(`${apiURL}/api/profiles`, {
+        axios.get(`${apiURL}/api/profile`, {
             headers: {
                 'Authorization': `JWT ${props.cookies.get('token')}`
                 }

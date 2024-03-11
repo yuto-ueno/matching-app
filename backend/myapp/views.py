@@ -9,7 +9,7 @@ from .models import CustomUser, Profile, GoOut, Matching, DirectMessage
 from .serializers import UserSerializer, ProfileSerializer, GoOutSerializer, MatchingSerializer, DirectMessageSerializer
 
 
-# ユーザー登録
+# ユーザーの登録
 class CreateUserView(CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
@@ -24,7 +24,7 @@ class UserView(RetrieveUpdateAPIView):
         return self.queryset.filter(id=self.request.user.id)
 
 
-# 自分のプロフィールのCRUD処理
+# 自分のプロフィールの取得と作成（GoOutはデフォルトでFalseが登録される）
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -33,7 +33,13 @@ class ProfileViewSet(ModelViewSet):
         return self.queryset.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        profile = serializer.save(user=self.request.user)
+        go_out_defaults = {
+            "user": profile.user,
+            "go_out": False,
+        }
+        GoOut.objects.create(**go_out_defaults)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         response = {'message': 'Delete is not allowed !'}
@@ -48,8 +54,8 @@ class ProfileViewSet(ModelViewSet):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 自分のプロフィールの表示
-class MyProfileListView(RetrieveUpdateAPIView):
+# 自分のプロフィールの取得と編集
+class MyProfileView(RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
@@ -68,7 +74,17 @@ class OtherProfileViewSet(ModelViewSet):
         return self.queryset.exclude(pk=self.request.user.pk)
 
 
-class GoOutViewSet(ModelViewSet):
+# 自分のGoOutの状態と取得と更新
+class MyGoOutViewSet(ModelViewSet):
+    queryset = GoOut.objects.all()
+    serializer_class = GoOutSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+
+# 自分のGoOut状態の変更と取得
+class MyGoOutEditView(RetrieveUpdateAPIView):
     queryset = GoOut.objects.all()
     serializer_class = GoOutSerializer
 
@@ -85,6 +101,7 @@ class TrueGoOutUserViewSet(ModelViewSet):
         return super().get_queryset().filter(go_out=True)
 
 
+# 自分がアプローチしている、またはアプローチされているリストの取得と作成
 class MatchingViewSet(ModelViewSet):
     queryset = Matching.objects.all()
     serializer_class = MatchingSerializer
@@ -95,6 +112,14 @@ class MatchingViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(approaching=self.request.user)
 
+
+# 自分がアプローチしているリストの取得と作成
+class MyApproachingViewSet(ModelViewSet):
+    queryset = Matching.objects.all()
+    serializer_class = MatchingSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(approaching=self.request.user)
 
 class DirectMessageViewSet(ModelViewSet):
     queryset = DirectMessage.objects.all()

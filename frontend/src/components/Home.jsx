@@ -6,22 +6,26 @@ import {Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/ma
 
 const Home = (props) => {
     const [myProfileList, setMyProfileList] = useState([]);
+    const [user, setUser] = useState("")
     const [goOut, setGoOut] = useState(false)
 
+    // 自分のプロファイルの取得
     useEffect(() => {
-        axios.get(`${apiURL}/api/profiles`, {
+        axios.get(`${apiURL}/api/profile`, {
             headers: {
                 'Authorization': `JWT ${props.cookies.get('token')}`
                 }
             })
             .then(res => {
                 setMyProfileList(res.data);
+                setUser(res.data[0].user)
             })
             .catch(error => {
                 console.error('Error');
             });
         }, [props.cookies]);
 
+    // GoOutの状態の取得
     useEffect(() => {
         axios.get(`${apiURL}/api/goout`, {
             headers: {
@@ -38,7 +42,7 @@ const Home = (props) => {
 
     const handleGoOut = () => {
         axios
-            .patch(`${apiURL}/api/goout/`, {"go_out":false}, {
+            .patch(`${apiURL}/api/users/goout/${user}`, {"go_out":true}, {
                 headers: {
                     Authorization: `JWT ${props.cookies.get("token")}`,
                 },
@@ -66,9 +70,8 @@ const Home = (props) => {
             {goOut ? (
                 <p>外出中です</p>
             ) : (
-                <button>外出ボタン</button>
+                <button onClick={handleGoOut}>外出ボタン</button>
             )}
-            <button onClick={handleGoOut}>外出ボタン</button>
             <br/>
 
             <Link href="/profile/edit">

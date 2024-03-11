@@ -31,7 +31,7 @@ const CreateProfile = (props) => {
     form_data.append("high_school", high_school);
     form_data.append("university", university);
 
-    const postUri = `${apiURL}/api/profiles/`;
+    const postUri = `${apiURL}/api/profile/`;
 
     axios
       .post(postUri, form_data, {
