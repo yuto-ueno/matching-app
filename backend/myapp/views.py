@@ -73,6 +73,15 @@ class GoOutViewSet(ModelViewSet):
     serializer_class = GoOutSerializer
 
     def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+
+# GoOutがTrueなユーザーの取得
+class TrueGoOutUserViewSet(ModelViewSet):
+    queryset = GoOut.objects.all()
+    serializer_class = GoOutSerializer
+
+    def get_queryset(self):
         return super().get_queryset().filter(go_out=True)
 
 

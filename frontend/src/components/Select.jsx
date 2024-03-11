@@ -42,7 +42,6 @@ const Select = (props) => {
                         <p>年齢：{profile.age}</p>
                         <p>性別：{profile.sex}</p>
                         <p>趣味：{profile.hobby}</p>
-                        <p>出身小学校：{profile.elementary_school}</p>
                         <Button
                             variant="contained"
                             onClick={() => handleLike()}
