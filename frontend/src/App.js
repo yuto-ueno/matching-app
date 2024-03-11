@@ -10,6 +10,7 @@ import EditProfile from "./components/EditProfile";
 import Select from "./components/Select";
 import Favorite from "./components/Favorite";
 import Dm from "./components/Dm";
+import Matching from "./components/Matching";
 
 
 export const apiURL = 'http://127.0.0.1:8000';
@@ -27,6 +28,7 @@ const App = () => {
                         <Route path="home" element={<Home />} />
                         <Route path="select" element={<Select />} />
                         <Route path="favorite" element={<Favorite />} />
+                        <Route path="matching" element={<Matching />} />
                         <Route path="dm" element={<Dm />} />
                     </Routes>
                 </CookiesProvider>

@@ -5,11 +5,13 @@ from .views import (CreateUserView,
                     ProfileViewSet,
                     MyProfileView,
                     OtherProfileViewSet,
+                    FavoriteProfileViewSet,
                     MyGoOutViewSet,
                     MyGoOutEditView,
                     TrueGoOutUserViewSet,
                     MatchingViewSet,
                     MyApproachingViewSet,
+                    ApproachingDeleteViewSet,
                     DirectMessageViewSet,
                     InboxListView)
 
@@ -18,10 +20,12 @@ app_name = 'myapp'
 router = DefaultRouter()
 router.register('profile', ProfileViewSet)
 router.register('other_profile', OtherProfileViewSet)
+router.register('favorite_profile', FavoriteProfileViewSet)
 router.register('goout', MyGoOutViewSet)
 router.register('true_goout', TrueGoOutUserViewSet)
 router.register('favorite', MatchingViewSet)
 router.register('my_favorite', MyApproachingViewSet)
+router.register('delete_favorite', ApproachingDeleteViewSet)
 router.register('dm-message', DirectMessageViewSet)
 router.register('dm-inbox', InboxListView)
 

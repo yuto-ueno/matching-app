@@ -89,6 +89,11 @@ const Home = (props) => {
             </Link>
             <br/>
 
+            <Link href="/matching">
+                <Button>マッチング成立</Button>
+            </Link>
+            <br/>
+
             <Link href="/dm">
                 <Button>DM</Button>
             </Link>

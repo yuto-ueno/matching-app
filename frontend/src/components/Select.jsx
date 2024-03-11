@@ -36,6 +36,20 @@ const Select = (props) => {
         })
             .then(res => {
                 console.log("success")
+                axios.get(`${apiURL}/api/my_favorite/`, {
+                    headers:{
+                        'Authorization': `JWT ${props.cookies.get('token')}`
+                    }
+                })
+                    .then(res => {
+                        // console.log(res.data)
+                        setLikedList(res.data)
+                        setApproachedList(res.data.map(item => item.approached))
+
+                    })
+                    .catch(error => {
+                        console.log("error")
+                    })
             })
             .catch(error => {
                 console.log("error")
@@ -58,9 +72,11 @@ const Select = (props) => {
             .catch(error => {
                 console.log("error")
             })
-    }, [approachedList]);
+    }, []);
 
-    // console.log(likedList.map(item => item.approached))
+    const handleDelete = (profile) => {
+        console.log("あとでつくる")
+    };
 
     return (
         <>
@@ -74,7 +90,15 @@ const Select = (props) => {
                         <p>趣味：{profile.hobby}</p>
 
                         {approachedList.includes(profile.user) ? (
-                            <p>LIKEボタンを押したよ</p>
+                            <div>
+                                <p>LIKEボタンを押したよ</p>
+                                <Button
+                                variant="contained"
+                                onClick={() => handleDelete(profile)}
+                                >
+                                    LIKEを取り消す
+                                </Button>
+                            </div>
                         ) : (
                             <Button
                             variant="contained"

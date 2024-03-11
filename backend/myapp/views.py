@@ -1,3 +1,4 @@
+from django.views.generic import DeleteView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
@@ -74,6 +75,25 @@ class OtherProfileViewSet(ModelViewSet):
         return self.queryset.exclude(pk=self.request.user.pk)
 
 
+# LIKEの人のプロフィールの表示
+class FavoriteProfileViewSet(ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+    allowed_methods = ('GET',)
+
+    def get_queryset(self):
+        # リクエストパラメータからユーザーIDのリストを取得
+        user_ids = self.request.query_params.getlist('user_ids')
+
+        # ユーザーIDが存在しない場合は、空のリストを返す
+        if not user_ids:
+            return []
+
+        # 指定されたユーザーIDのプロフィールのみを取得
+        return self.queryset.filter(pk__in=user_ids)
+
+
 # 自分のGoOutの状態と取得と更新
 class MyGoOutViewSet(ModelViewSet):
     queryset = GoOut.objects.all()
@@ -120,6 +140,27 @@ class MyApproachingViewSet(ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(approaching=self.request.user)
+
+
+class ApproachingDeleteViewSet(ModelViewSet):
+    queryset = Matching.objects.all()
+    serializer_class = MatchingSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        approached = self.request.query_params.get('approached')
+        if approached:
+            queryset = queryset.filter(
+                Q(approached=approached) & Q(approaching=self.request.user)
+            )
+        return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
 class DirectMessageViewSet(ModelViewSet):
     queryset = DirectMessage.objects.all()
