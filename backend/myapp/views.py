@@ -1,5 +1,4 @@
-from django.views.generic import DeleteView
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -16,7 +15,7 @@ class CreateUserView(CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-# 自分のユーザー情報の取得と更新
+# 自分のユーザー情報（メールとパスワード）の取得と更新
 class UserView(RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
@@ -42,21 +41,9 @@ class ProfileViewSet(ModelViewSet):
         GoOut.objects.create(**go_out_defaults)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def destroy(self, request, *args, **kwargs):
-        response = {'message': 'Delete is not allowed !'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, *args, **kwargs):
-        response = {'message': 'Update DM is not allowed'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-    def partial_update(self, request, *args, **kwargs):
-        response = {'message': 'Patch DM is not allowed'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
 
 # 自分のプロフィールの取得と編集
-class MyProfileView(RetrieveUpdateAPIView):
+class EditProfileView(RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
@@ -75,7 +62,7 @@ class OtherProfileViewSet(ModelViewSet):
         return self.queryset.exclude(pk=self.request.user.pk)
 
 
-# LIKEの人のプロフィールの表示
+# LIKEした人のプロフィールの表示
 class FavoriteProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -121,15 +108,16 @@ class TrueGoOutUserViewSet(ModelViewSet):
         return super().get_queryset().filter(go_out=True)
 
 
-# 自分がアプローチしている、またはアプローチされているリストの取得と作成
-class MatchingViewSet(ModelViewSet):
+# 自分がアプローチされているリストの取得と作成
+class ApproachedMeViewSet(ModelViewSet):
     queryset = Matching.objects.all()
     serializer_class = MatchingSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(Q(approaching=self.request.user) | Q(approached=self.request.user))
+        return self.queryset.filter(approached=self.request.user)
 
     def perform_create(self, serializer):
+        # POSTリクエストを送った時にapproachingフィールドに、requestユーザーを登録する
         serializer.save(approaching=self.request.user)
 
 
@@ -141,25 +129,52 @@ class MyApproachingViewSet(ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(approaching=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(approaching=self.request.user)
 
-class ApproachingDeleteViewSet(ModelViewSet):
+
+class ApproachingDeleteView(DestroyAPIView):
     queryset = Matching.objects.all()
     serializer_class = MatchingSerializer
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        approached = self.request.query_params.get('approached')
-        if approached:
-            queryset = queryset.filter(
-                Q(approached=approached) & Q(approaching=self.request.user)
-            )
-        return queryset
+    def get_object(self):
+        # リクエストパラメータから approached を取得
+        approached = self.request.GET.get('approached')
+        if not approached:
+            return Response({'error': 'approached パラメータが必要です'}, status=400)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        # リクエストを送信しているユーザーを取得
+        user = self.request.user
 
+        # クエリセットをフィルタリング
+        queryset = self.queryset.filter(
+            Q(approaching=user.id) & Q(approached=approached)
+        )
+
+        # フィルタリング結果からオブジェクトを取得
+        obj = queryset.get()
+
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        # リクエストパラメータから approached を取得
+        approached = request.GET.get('approached')
+        if not approached:
+            return Response({'error': 'approached パラメータが必要です'}, status=400)
+
+        # リクエストを送信しているユーザーを取得
+        user = request.user
+
+        # クエリセットをフィルタリング
+        queryset = self.queryset.filter(
+            Q(approaching=user.id) & Q(approached=approached)
+        )
+
+        # シリアライザでクエリセットをシリアル化
+        serializer = self.serializer_class(queryset, many=True)
+
+        # シリアル化されたデータを返す
+        return Response(serializer.data)
 
 
 class DirectMessageViewSet(ModelViewSet):

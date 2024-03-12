@@ -3,15 +3,15 @@ from django.urls import path, include
 from .views import (CreateUserView,
                     UserView,
                     ProfileViewSet,
-                    MyProfileView,
+                    EditProfileView,
                     OtherProfileViewSet,
                     FavoriteProfileViewSet,
                     MyGoOutViewSet,
                     MyGoOutEditView,
                     TrueGoOutUserViewSet,
-                    MatchingViewSet,
+                    ApproachedMeViewSet,
                     MyApproachingViewSet,
-                    ApproachingDeleteViewSet,
+                    ApproachingDeleteView,
                     DirectMessageViewSet,
                     InboxListView)
 
@@ -23,16 +23,16 @@ router.register('other_profile', OtherProfileViewSet)
 router.register('favorite_profile', FavoriteProfileViewSet)
 router.register('goout', MyGoOutViewSet)
 router.register('true_goout', TrueGoOutUserViewSet)
-router.register('favorite', MatchingViewSet)
+router.register('approached_me', ApproachedMeViewSet)
 router.register('my_favorite', MyApproachingViewSet)
-router.register('delete_favorite', ApproachingDeleteViewSet)
 router.register('dm-message', DirectMessageViewSet)
 router.register('dm-inbox', InboxListView)
 
 urlpatterns = [
     path('users/create', CreateUserView.as_view(), name='users-create'),
     path('users/<pk>', UserView.as_view(), name='users'),
-    path('users/profile/<pk>', MyProfileView.as_view(), name='users-profile'),
+    path('users/edit_profile/<pk>', EditProfileView.as_view(), name='users-profile'),
     path('users/goout/<pk>', MyGoOutEditView.as_view(), name='edit-goout'),
+    path('delete_favorite', ApproachingDeleteView.as_view(), name='delete-favorite'),
     path('', include(router.urls)),
 ]

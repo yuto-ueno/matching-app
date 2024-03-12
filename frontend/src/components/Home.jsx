@@ -94,10 +94,6 @@ const Home = (props) => {
             </Link>
             <br/>
 
-            <Link href="/dm">
-                <Button>DM</Button>
-            </Link>
-            <br/>
 
             <Link href="/login">
                 <Button>ログアウト</Button>

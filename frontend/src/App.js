@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, useParams} from 'react-router-dom';
 import CreateUser  from './components/CreateUser';
 import Login  from './components/Login';
 import Home  from './components/Home';
@@ -29,7 +29,7 @@ const App = () => {
                         <Route path="select" element={<Select />} />
                         <Route path="favorite" element={<Favorite />} />
                         <Route path="matching" element={<Matching />} />
-                        <Route path="dm" element={<Dm />} />
+                        <Route path="dm/:userId" element={<Dm />} />
                     </Routes>
                 </CookiesProvider>
             </Router>

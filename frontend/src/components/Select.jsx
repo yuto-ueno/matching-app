@@ -29,7 +29,7 @@ const Select = (props) => {
         }, [props.cookies]);
 
     const handleLike = (profile) => {
-        axios.post(`${apiURL}/api/favorite/`, {"approached":profile.user}, {
+        axios.post(`${apiURL}/api/my_favorite/`, {"approached":profile.user}, {
             headers:{
                 'Authorization': `JWT ${props.cookies.get('token')}`
             }
@@ -75,7 +75,31 @@ const Select = (props) => {
     }, []);
 
     const handleDelete = (profile) => {
-        console.log("あとでつくる")
+        axios.delete(`${apiURL}/api/delete_favorite?approached=${profile.user}`, {
+            headers:{
+                'Authorization': `JWT ${props.cookies.get('token')}`
+            }
+        })
+            .then(res => {
+                console.log("success")
+                axios.get(`${apiURL}/api/my_favorite/`, {
+                    headers:{
+                        'Authorization': `JWT ${props.cookies.get('token')}`
+                    }
+                })
+                    .then(res => {
+                        // console.log(res.data)
+                        setLikedList(res.data)
+                        setApproachedList(res.data.map(item => item.approached))
+
+                    })
+                    .catch(error => {
+                        console.log("error")
+                    })
+            })
+            .catch(error => {
+                console.log("error")
+            })
     };
 
     return (
@@ -93,7 +117,6 @@ const Select = (props) => {
                             <div>
                                 <p>LIKEボタンを押したよ</p>
                                 <Button
-                                variant="contained"
                                 onClick={() => handleDelete(profile)}
                                 >
                                     LIKEを取り消す

@@ -57,7 +57,7 @@ const EditProfile = (props) => {
         form_data.append("high_school", high_school);
         form_data.append("university", university);
 
-        const patchUri = `${apiURL}/api/users/profile/${user}`;
+        const patchUri = `${apiURL}/api/users/edit_profile/${user}`;
 
         axios
       .patch(patchUri, form_data, {
