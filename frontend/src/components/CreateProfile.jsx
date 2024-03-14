@@ -4,7 +4,7 @@ import { apiURL } from "../App";
 import axios from "axios";
 
 const CreateProfile = (props) => {
-  const [is_kyc, setIs_kyc] = useState(true);
+  // Profileの情報を格納
   const [last_name, setLast_name] = useState("");
   const [first_name, setFirst_name] = useState("");
   const [age, setAge] = useState("");
@@ -15,12 +15,11 @@ const CreateProfile = (props) => {
   const [high_school, setHigh_school] = useState("");
   const [university, setUniversity] = useState("");
 
-  const profile = (event) => {
+  const handleCreate = (event) => {
     event.preventDefault();
+    const form_data = new FormData();
 
-    let form_data = new FormData();
-
-    form_data.append("is_kyc", is_kyc);
+    form_data.append("is_kyc", true);
     form_data.append("last_name", last_name);
     form_data.append("first_name", first_name);
     form_data.append("age", age);
@@ -31,26 +30,23 @@ const CreateProfile = (props) => {
     form_data.append("high_school", high_school);
     form_data.append("university", university);
 
-    const postUri = `${apiURL}/api/profile/`;
-
-    axios
-      .post(postUri, form_data, {
+    axios.post(`${apiURL}/api/profile/`, form_data, {
         headers: {
           Authorization: `JWT ${props.cookies.get("token")}`,
         },
       })
-      .then((response) => {
-        console.log("success");
-        window.location.href = "/home";
+        .then((res) => {
+          console.log(res.data);
+          window.location.href = "/home";
       })
-      .catch((error) => {
-        console.log(props.cookies);
+        .catch((error) => {
+          console.log(error);
       });
   };
 
   return (
     <>
-      <form onSubmit={profile}>
+      <form onSubmit={handleCreate}>
         <h2>プロフィール作成</h2>
 
         <label htmlFor="last_name">姓</label>

@@ -1,51 +1,49 @@
 import React, {useState}  from 'react';
 import axios from 'axios';
-import {Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/material'
+import {Box, Button, Container, TextField, Typography} from '@mui/material'
 import { apiURL } from '../App'
 import {withCookies} from "react-cookie";
 
 // ユーザーの新規登録
-const CreateUser = (props) => {
+const SignUp = (props) => {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
 
-    const createUser = (event) => {
+    const handleCreate = (event) => {
         event.preventDefault();
-
-        let form_data = new FormData();
+        const form_data = new FormData();
 
         form_data.append('email', email);
         form_data.append('password', password);
 
-        const postUri = `${apiURL}/api/users/create`;
-
-        axios.post(postUri, form_data, {
+        axios.post(`${apiURL}/api/users/create`, form_data, {
             headers: {
                 'Content-Type': 'application/json'
             },
         })
-        .then( response => {
-            // 認証
-            const certificationUri = `${apiURL}/authen/jwt/create`;
-            axios.post(certificationUri, form_data, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then( response => {
-                    props.cookies.set('token', response.data.access)
-                    console.log("success")
-                    window.location.href="/profile/create";
-                })
-                .catch( () => {
-                    console.log("certification error");
-                });
+            .then( res => {
+                console.log(res.data)
+                const certificationUri = `${apiURL}/authen/jwt/create`;
 
-        })
-        .catch( () => {
-          console.log("error");
-        });
-  }
+                axios.post(certificationUri, form_data, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then( res => {
+                        props.cookies.set('token', res.data.access)
+                        console.log("success")
+                        window.location.href="/profile/create";
+                    })
+                    .catch( () => {
+                        console.log("certification error");
+                    });
+            })
+
+            .catch( () => {
+                console.log("error");
+            });
+    }
 
   return(
     <Container maxWidth="xs">
@@ -61,7 +59,7 @@ const CreateUser = (props) => {
           新規登録
         </Typography>
 
-        <Box component="form" noValidate sx={{mt:1}} onSubmit={createUser}>
+        <Box component="form" noValidate sx={{mt:1}} onSubmit={handleCreate}>
           <TextField
               margin="normal"
               required
@@ -100,10 +98,6 @@ const CreateUser = (props) => {
             ログインはこちら
           </Button>
 
-          <Typography component="h2" variant="h5">
-          パスワードは8文字以上、同じメールアドレスはだめ。あとで、エラーが起きないような工夫をする！
-          </Typography>
-
         </Box>
 
       </Box>
@@ -112,4 +106,4 @@ const CreateUser = (props) => {
 
  }
 
-export default withCookies(CreateUser)
+export default withCookies(SignUp)

@@ -1,15 +1,14 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Routes, useParams} from 'react-router-dom';
-import CreateUser  from './components/CreateUser';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import SignUp  from './components/SignUp';
 import Login  from './components/Login';
 import Home  from './components/Home';
 import { CookiesProvider, withCookies} from 'react-cookie';
-import Header from "./components/Header";
 import CreateProfile from "./components/CreateProfile";
 import EditProfile from "./components/EditProfile";
-import Select from "./components/Select";
+import Choice from "./components/Choice";
 import Favorite from "./components/Favorite";
-import Dm from "./components/Dm";
+import DirectMessage from "./components/DirectMessage";
 import Matching from "./components/Matching";
 
 
@@ -21,15 +20,15 @@ const App = () => {
             <Router>
                 <CookiesProvider>
                     <Routes>
-                        <Route path="/" element={<CreateUser />} />
+                        <Route path="/" element={<SignUp />} />
                         <Route path="profile/create" element={<CreateProfile />} />
                         <Route path="profile/edit" element={<EditProfile />} />
                         <Route path="login" element={<Login />} />
                         <Route path="home" element={<Home />} />
-                        <Route path="select" element={<Select />} />
+                        <Route path="choice" element={<Choice />} />
                         <Route path="favorite" element={<Favorite />} />
                         <Route path="matching" element={<Matching />} />
-                        <Route path="dm/:userId" element={<Dm />} />
+                        <Route path="dm/:userId" element={<DirectMessage />} />
                     </Routes>
                 </CookiesProvider>
             </Router>

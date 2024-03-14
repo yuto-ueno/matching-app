@@ -10,55 +10,65 @@ const Matching = (props) => {
     const [matchingList, setMatchingList] = useState([])
     const [matchingUserProfileList, setMatchingUserProfileList] = useState([])
 
-    useEffect(() => {
+    // 自分がLIKEを押した人
+    const getFavorite = () => {
         axios.get(`${apiURL}/api/my_favorite/`, {
             headers:{
                 'Authorization': `JWT ${props.cookies.get('token')}`
             }
         })
             .then(res => {
-                console.log("success")
                 setFavoriteList(res.data.map(item => item.approached))
             })
             .catch(error => {
-                console.log("error")
+                console.log(error)
             })
+    }
 
+    // 自分にLIKEを押してくれた人
+    const getApproachedMe = () => {
         axios.get(`${apiURL}/api/approached_me/`, {
             headers:{
                 'Authorization': `JWT ${props.cookies.get('token')}`
             }
         })
             .then(res => {
-                console.log("success")
                 setApproachedMeList(res.data.map(item => item.approaching))
             })
             .catch(error => {
-                console.log("error")
+                console.log(error)
             })
-    }, []);
+    }
+
+    // 両想いのユーザーのProfile
+    const matchingProfile = () => {
+        const queryString = matchingList.map(id => `user_ids=${id}`).join('&');
+        const getMatchingUrl = `${apiURL}/api/favorite_profile?${queryString}`;
+
+        axios.get(getMatchingUrl, {
+            headers: {
+                'Authorization': `JWT ${props.cookies.get('token')}`
+            }
+        })
+            .then(res => {
+                setMatchingUserProfileList(res.data)
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 
     useEffect(() => {
+        getFavorite()
+        getApproachedMe()
+
+        // 両想いの人のフィルタリング
         setMatchingList(favoriteList.filter(element => approachedMeList.includes(element)))
     }, [approachedMeList]);
 
     useEffect(() => {
-        const queryString = matchingList.map(id => `user_ids=${id}`).join('&');
-        const url = `${apiURL}/api/favorite_profile?${queryString}`;
-
-        axios.get(url, {
-            headers: {
-                'Authorization': `JWT ${props.cookies.get('token')}`
-                }
-            })
-            .then(res => {
-                console.log("success")
-                setMatchingUserProfileList(res.data)
-            })
-            .catch(error => {
-                console.error('Error');
-            });
-        }, [matchingList]);
+        matchingProfile()
+    }, [matchingList]);
 
     return(
         <>

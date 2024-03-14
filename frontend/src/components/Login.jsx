@@ -4,8 +4,6 @@ import {
   Box,
   Button,
   Container,
-  Grid,
-  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,30 +15,25 @@ const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
-
     let form_data = new FormData();
 
     form_data.append("email", email);
     form_data.append("password", password);
 
-    const postUri = `${apiURL}/authen/jwt/create`;
-
-    axios
-      .post(postUri, form_data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        props.cookies.set("token", response.data.access);
-        // console.log("success")
-        window.location.href = "/home";
-      })
-      .catch(() => {
-        console.log("error");
-      });
+    axios.post(`${apiURL}/authen/jwt/create`, form_data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+        .then((res) => {
+          props.cookies.set("token", res.data.access);
+          window.location.href = "/home";
+        })
+        .catch(() => {
+          console.log("error");
+        });
   };
 
   return (
@@ -50,7 +43,7 @@ const Login = (props) => {
           ログイン
         </Typography>
 
-        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={login}>
+        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleLogin}>
           <TextField
             margin="normal"
             required

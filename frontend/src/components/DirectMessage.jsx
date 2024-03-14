@@ -5,14 +5,13 @@ import { useParams } from "react-router-dom";
 import { apiURL } from "../App";
 import axios from "axios";
 
-const Dm = (props) => {
+const DirectMessage = (props) => {
   const { userId } = useParams();
   const [friendName, setFriendName] = useState("");
   const [messages, setMessages] = useState([]); // Combined messages state
   const [input, setInput] = useState("")
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
       try {
         const friendResponse = await axios.get(`${apiURL}/api/favorite_profile?user_ids=${userId}`, {
           headers: {
@@ -43,22 +42,22 @@ const Dm = (props) => {
         // Sort messages chronologically by 'created_at' field
         combinedMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-
         setMessages(combinedMessages);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchData();
+  useEffect(() => {
+    fetchData().then(r => console.log(r));
   }, [userId]);
 
-  const message = (event) => {
+  const handleSendMessage = (event) => {
     event.preventDefault();
-    let form_data = new FormData();
+    const form_data = new FormData();
 
     form_data.append("message", input);
-    form_data.append("receiver", userId)
+    form_data.append("receiver", userId);
 
     axios.post(`${apiURL}/api/dm-message/`, form_data, {
       headers:{
@@ -66,46 +65,9 @@ const Dm = (props) => {
       }
     })
         .then(res => {
-           const fetchData = async () => {
-      try {
-        const friendResponse = await axios.get(`${apiURL}/api/favorite_profile?user_ids=${userId}`, {
-          headers: {
-            Authorization: `JWT ${props.cookies.get("token")}`,
-          },
-        });
-
-        setFriendName(friendResponse.data[0].last_name);
-
-        const sentMessagesResponse = await axios.get(`${apiURL}/api/dm-message?receiver_id=${userId}`, {
-          headers: {
-            Authorization: `JWT ${props.cookies.get("token")}`,
-          },
-        });
-
-        const receivedMessagesResponse = await axios.get(`${apiURL}/api/dm-inbox?sender_id=${userId}`, {
-          headers: {
-            Authorization: `JWT ${props.cookies.get("token")}`,
-          },
-        });
-
-        // Combine messages with proper sender identification
-        const combinedMessages = [
-          ...sentMessagesResponse.data.map((message) => ({ ...message, isSent: true })),
-          ...receivedMessagesResponse.data.map((message) => ({ ...message, isSent: false })),
-        ];
-
-        // Sort messages chronologically by 'created_at' field
-        combinedMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-
-
-        setMessages(combinedMessages);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-    setInput("")
+          console.log(res.data)
+          fetchData().then(r => console.log(r));
+          setInput("")
         })
         .catch(error => {
           console.log("e")
@@ -125,7 +87,7 @@ const Dm = (props) => {
           ))}
         </div>
 
-        <form onSubmit={message}>
+        <form onSubmit={handleSendMessage}>
           <label>メッセージ</label>
           <textarea
               id="message"
@@ -143,4 +105,4 @@ const Dm = (props) => {
   );
 };
 
-export default withCookies(Dm);
+export default withCookies(DirectMessage);

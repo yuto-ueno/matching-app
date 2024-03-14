@@ -6,9 +6,9 @@ import {apiURL} from "../App";
 
 const Favorite = (props) => {
     const [favoriteList, setFavoriteList] = useState([])
-    const [otherProfileList, setOtherProfileList] = useState([]);
+    const [favoriteProfileList, setFavoriteProfileList] = useState([]);
 
-    useEffect(() => {
+    const getFavorite = () => {
         axios.get(`${apiURL}/api/my_favorite/`, {
             headers:{
                 'Authorization': `JWT ${props.cookies.get('token')}`
@@ -18,35 +18,38 @@ const Favorite = (props) => {
                 setFavoriteList(res.data.map(item => item.approached))
             })
             .catch(error => {
-                console.log("error")
+                console.log(error)
             })
-    }, []);
+    }
 
-    useEffect(() => {
+    const getFavoriteProfile = () => {
         const queryString = favoriteList.map(id => `user_ids=${id}`).join('&');
-        const url = `${apiURL}/api/favorite_profile?${queryString}`;
+        const getFavoriteUrl = `${apiURL}/api/favorite_profile?${queryString}`;
 
-        axios.get(url, {
+        axios.get(getFavoriteUrl, {
             headers: {
                 'Authorization': `JWT ${props.cookies.get('token')}`
                 }
             })
             .then(res => {
-                setOtherProfileList(res.data)
-                //console.log("success")
-
+                setFavoriteProfileList(res.data)
             })
             .catch(error => {
-                console.error('Error');
+                console.error(error);
             });
-        }, [favoriteList]);
+    }
+
+    useEffect(() => {
+        getFavorite()
+        getFavoriteProfile()
+    }, [favoriteList]);
 
     return(
         <>
             <h1>LIKEした人</h1>
 
             <div>
-                {otherProfileList.map((profile, index) => (
+                {favoriteProfileList.map((profile, index) => (
                     <div key={index}>
                         <p>名前：{profile.last_name} {profile.first_name}</p>
                         <p>年齢：{profile.age}</p>

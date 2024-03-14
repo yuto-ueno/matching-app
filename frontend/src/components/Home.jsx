@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { withCookies } from 'react-cookie';
 import axios from 'axios';
 import { apiURL } from '../App';
-import {Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/material'
+import {Box, Button, Container, Grid, Link, Paper, Typography} from '@mui/material'
 
 const Home = (props) => {
     const [myProfileList, setMyProfileList] = useState([]);
-    const [user, setUser] = useState("")
-    const [goOut, setGoOut] = useState(false)
+    const editProfileDirectory = "/profile/edit"
 
     // 自分のプロファイルの取得
     useEffect(() => {
@@ -18,22 +17,6 @@ const Home = (props) => {
             })
             .then(res => {
                 setMyProfileList(res.data);
-                setUser(res.data[0].user)
-            })
-            .catch(error => {
-                console.error('Error');
-            });
-        }, [props.cookies]);
-
-    // GoOutの状態の取得
-    useEffect(() => {
-        axios.get(`${apiURL}/api/goout`, {
-            headers: {
-                'Authorization': `JWT ${props.cookies.get('token')}`
-                }
-            })
-            .then(res => {
-                setGoOut(res.data[0].go_out);
             })
             .catch(error => {
                 console.error('Error');
@@ -41,43 +24,57 @@ const Home = (props) => {
         }, [props.cookies]);
 
     return (
-        <div>
-            <h1>Home</h1>
-            <div>
-                {myProfileList.map((profile, index) => (
-                    <div key={index}>
-                        <p>こんにちは{profile.last_name} {profile.first_name}さん</p>
-                    </div>
-                ))}
-            </div>
-
-            <Link href="/profile/edit">
-                <Button>プロフィールの編集</Button>
-            </Link>
-            <br/>
-
-            <Link href="/select">
-                <Button>仲間探し</Button>
-            </Link>
-            <br/>
-
-            <Link href="/favorite">
-                <Button>LIKEした人</Button>
-            </Link>
-            <br/>
-
-            <Link href="/matching">
-                <Button>マッチング成立</Button>
-            </Link>
-            <br/>
-
-
-            <Link href="/login">
-                <Button>ログアウト</Button>
-            </Link>
-            <br/>
-
-        </div>
+        <Container maxWidth="sm">
+            <Box sx={{ my: 4 }}>
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Home
+                </Typography>
+                <Paper sx={{ p: 2 }}>
+                    {myProfileList.map((profile, index) => (
+                        <Grid container key={index}>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" component="h2">
+                                    こんにちは {profile.last_name} {profile.first_name}さん
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} sx={{ mt: 2 }}>
+                                <Link href={editProfileDirectory}>
+                                    <Button variant="outlined">プロフィール編集</Button>
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    ))}
+                </Paper>
+                <Box sx={{ mt: 4 }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <Link href="/Choice">
+                                <Button variant="contained" fullWidth>仲間探し</Button>
+                            </Link>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Link href="/favorite">
+                                <Button variant="contained" fullWidth>LIKEした人</Button>
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </Box>
+                <Box sx={{ mt:4 }}>
+                    <Grid item xs={12} sm={6}>
+                        <Link href="/matching">
+                            <Button variant="contained" fullWidth>マッチング成立</Button>
+                        </Link>
+                    </Grid>
+                </Box>
+                <Box sx={{ mt:4 }}>
+                    <Grid>
+                        <Link href="/login">
+                            <Button variant="outlined" fullWidth>ログアウト</Button>
+                        </Link>
+                    </Grid>
+                </Box>
+            </Box>
+        </Container>
     );
 }
 
