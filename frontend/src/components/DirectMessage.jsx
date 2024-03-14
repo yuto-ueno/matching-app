@@ -1,5 +1,5 @@
 import { withCookies } from "react-cookie";
-import { Button, Link } from "@mui/material";
+import {Box, Button, Divider, Grid, Link, List, ListItem, TextField, Typography} from "@mui/material";
 import React, {useEffect, useRef, useState} from "react";
 import { useParams } from "react-router-dom";
 import { apiURL } from "../App";
@@ -74,34 +74,87 @@ const DirectMessage = (props) => {
         })
   }
 
+  const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100vh",
+  },
+  header: {
+    padding: "16px",
+    backgroundColor: "#f5f5f5",
+  },
+  messageList: {
+    flex: 1,
+    overflow: "scroll",
+  },
+  message: {
+    padding: "8px 16px",
+    maxWidth: "80%",
+    borderRadius: "8px",
+    backgroundColor: "#f5f5f5",
+  },
+  myMessage: {
+    backgroundColor: "#fff",
+    alignSelf: "flex-end",
+  },
+  inputArea: {
+    padding: "16px",
+  },
+  input: {
+    width: "95%",
+    padding: "8px 16px",
+    borderRadius: "10px",
+    // border: "1px solid #ccc",
+  },
+  button: {
+    marginRight: "10px",
+  },
+};
+
   return (
-      <>
-        <h1>{friendName}さんとのメッセージ</h1>
-
-        <div>
-          {messages.map((message, index) => (
-              <div key={index}>
-                <p>{message.isSent ? "あなた：" : `${friendName}：`}{message.message}</p>
-                <hr/>
-              </div>
-          ))}
-        </div>
-
-        <form onSubmit={handleSendMessage}>
-          <label>メッセージ</label>
-          <textarea
+      <Box sx={styles.container}>
+        <Box sx={styles.header}>
+          <Typography variant="h6">{friendName}さんとのメッセージ</Typography>
+        </Box>
+        <Box sx={styles.messageList}>
+          <List>
+            {messages.map((message, index) => (
+                <ListItem key={index}>
+                  <Box  sx={styles.message} className={message.isSent ? styles.myMessage : ""}>
+                    {message.isSent ? "あなた：" : `${friendName}：`}{message.message}
+                  </Box>
+                  <Divider />
+                </ListItem>
+            ))}
+          </List>
+        </Box>
+        <Box sx={styles.inputArea}>
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={10}>
+             <TextField
               id="message"
               name="message"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              sx={styles.input}
+              multiline
+              rows={1}
           />
-          <button type="submit">送信</button>
-        </form>
-
-        <Link href="/home">
-          <Button>Homeに戻る</Button>
-        </Link>
-      </>
+          </Grid>
+          <Grid item xs={2}>
+            <Button variant="contained" type="submit" sx={styles.button} onClick={handleSendMessage}>
+              送信
+            </Button>
+          </Grid>
+          </Grid>
+        </Box>
+        <Box sx={{ padding: "16px" }}>
+          <Link href="/home">
+            <Button variant="outlined">Homeに戻る</Button>
+          </Link>
+        </Box>
+      </Box>
   );
 };
 

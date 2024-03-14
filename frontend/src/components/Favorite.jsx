@@ -1,5 +1,5 @@
 import { withCookies } from "react-cookie";
-import {Button, Link} from "@mui/material";
+import {Box, Button, Card, Container, Grid, Link, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {apiURL} from "../App";
@@ -45,25 +45,27 @@ const Favorite = (props) => {
     }, [favoriteList]);
 
     return(
-        <>
-            <h1>LIKEした人</h1>
+        <Container maxWidth="md">
+            <Box sx={{my:4}}>
+                <Typography variant="h4" component="h1" gutterBottom>
+                    LIKEした人
+                </Typography>
+            </Box>
 
-            <div>
-                {favoriteProfileList.map((profile, index) => (
-                    <div key={index}>
-                        <p>名前：{profile.last_name} {profile.first_name}</p>
-                        <p>年齢：{profile.age}</p>
-                        <p>性別：{profile.sex}</p>
-                        <p>趣味：{profile.hobby}</p>
-                        <hr/>
-                    </div>
-                ))}
-            </div>
+            {favoriteProfileList.map((profile, index) => (
+                <Card sx={{my:4}}>
+                    <Typography sx={{my:4, mx:4}}>
+                        {profile.last_name} {profile.first_name}さん
+                    </Typography>
+                </Card>
+            ))}
 
-            <Link href="/home">
-                <Button>Homeに戻る</Button>
-            </Link>
-        </>
+            <Box sx={{ mt: 2 }}>
+                <Link href="/home">
+                    <Button variant="outlined">Homeに戻る</Button>
+                </Link>
+            </Box>
+        </Container>
     )
 }
 

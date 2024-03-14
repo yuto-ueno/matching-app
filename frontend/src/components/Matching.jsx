@@ -1,5 +1,5 @@
 import {withCookies} from "react-cookie";
-import {Button, Link} from "@mui/material";
+import {Box, Button, Card, Container, Grid, Link, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {apiURL} from "../App";
@@ -71,28 +71,39 @@ const Matching = (props) => {
     }, [matchingList]);
 
     return(
-        <>
-            <h1>マッチングが成立した人</h1>
+        <Container>
+            <Box sx={{my:4}}>
+                <Typography variant="h4" component="h4" gutterBottom>
+                    マッチングが成立した人
+                </Typography>
 
-            <div>
                 {matchingUserProfileList.map((profile, index) => (
-                    <div key={index}>
-                        <p>名前：{profile.last_name} {profile.first_name}</p>
-                        <p>年齢：{profile.age}</p>
-                        <p>性別：{profile.sex}</p>
-                        <p>趣味：{profile.hobby}</p>
-                        <Link href={`/dm/${profile.user}`}>
-                            <Button>DM</Button>
-                        </Link>
-                        <hr/>
-                    </div>
+                    <Card sx={{my:4, maxWidth: 400}} key={index}>
+                        <Grid container justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <Typography sx={{my:4, mx:4}}>
+                                    {profile.last_name} {profile.first_name}さん
+                                </Typography>
+                            </Grid>
+                            <Grid item xa={6}>
+                                <Typography sx={{my:4, mx:4}}>
+                                    <Link href={`/dm/${profile.user}`}>
+                                        <Button>DM</Button>
+                                    </Link>
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Card>
                 ))}
-            </div>
 
-            <Link href="/home">
-                <Button>Homeに戻る</Button>
-            </Link>
-        </>
+            </Box>
+
+            <Box sx={{ mt: 2 }}>
+                <Link href="/home">
+                    <Button variant="outlined">Homeに戻る</Button>
+                </Link>
+            </Box>
+        </Container>
     )
 }
 

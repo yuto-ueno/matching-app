@@ -1,5 +1,17 @@
 import { withCookies } from 'react-cookie';
-import {Box, Button, Container, Grid, InputLabel, Link, Paper, Select, TextField, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    InputLabel,
+    Link,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+    Typography
+} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {apiURL} from "../App";
 import axios from "axios";
@@ -75,10 +87,8 @@ const EditProfile = (props) => {
 
     return(
         <Container maxWidth="md">
-            <Box sx={{my:4}} component="h1" gutterBottom>
-                <Typography variant="h4">
+            <Box sx={{my:4}} component="h1">
                     プロフィール編集
-                </Typography>
             </Box>
             <Paper sx={{p:10}}>
                 <Box component="form" sx={{mt:1}} onSubmit={handleEdit}>
@@ -130,8 +140,8 @@ const EditProfile = (props) => {
                         onChange={(e) => setSex(e.target.value)}
                         label="性別"
                     >
-                        <option value="male">男性</option>
-                        <option value="female">女性</option>
+                        <MenuItem value="male">男性</MenuItem>
+                        <MenuItem value="female">女性</MenuItem>
                     </Select>
 
                     <Grid>
@@ -140,7 +150,7 @@ const EditProfile = (props) => {
                             label="趣味"
                             id="hobby"
                             name="hobby"
-                            value={age}
+                            value={hobby}
                             onChange={(e) => setHobby(e.target.value)}
                             fullWidth
                             required
@@ -168,19 +178,6 @@ const EditProfile = (props) => {
                             name="middle_school"
                             value={middle_school}
                             onChange={(e) => setMiddle_school(e.target.value)}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-
-                    <Grid>
-                        <TextField
-                            margin="normal"
-                            label="高校"
-                            id="high_school"
-                            name="high_school"
-                            value={high_school}
-                            onChange={(e) => setHigh_school(e.target.value)}
                             fullWidth
                             required
                         />

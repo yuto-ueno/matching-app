@@ -2,7 +2,7 @@ import { withCookies } from "react-cookie";
 import {apiURL} from "../App";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Box, Button, Container, Grid, Link, Paper, Typography} from "@mui/material";
+import {Box, Button, Card, Container, Grid, Link, Paper, Table, Typography} from "@mui/material";
 
 const Choice = (props) => {
     const [otherProfileList, setOtherProfileList] = useState([]);
@@ -79,26 +79,36 @@ const Choice = (props) => {
                 <Typography variant="h4" component="h1" gutterBottom>
                     気になる人にLIKEボタンを押そう！
                 </Typography>
+
                 {otherProfileList.map((profile, index) => (
-                    <Paper key={index} sx={{ p: 4 }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Typography variant="h5" component="h2">
-                                    {profile.last_name} {profile.first_name}さん
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <ul>
-                                    <li>年齢：{profile.age}歳</li>
-                                    <li>性別：{profile.sex}</li>
-                                    <li>趣味：{profile.hobby}</li>
-                                </ul>
+                    <Card sx={{ my:4 }} key={index}>
+                        <Grid container justifyContent="center" alignItems="center">
+                            <Grid  item xs={6}>
+                                <Table sx={{my:4, mx:4}}>
+                                    <tbody>
+                                    <tr>
+                                        <th>名前</th>
+                                        <td>{profile.last_name} {profile.first_name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>年齢</th>
+                                        <td>{profile.age}歳</td>
+                                    </tr>
+                                    <tr>
+                                        <th>性別</th>
+                                        <td>{profile.sex}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>趣味</th>
+                                        <td>{profile.hobby}</td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
                             </Grid>
                             <Grid item xs={6}>
                                 {favoriteList.includes(profile.user) ? (
                                     <div>
-                                        <Typography variant="body1">LIKEボタンを押したよ！</Typography>
-                                        <Button variant="outlined" onClick={() => handleDelete(profile)}>
+                                        <Button  variant="outlined" onClick={() => handleDelete(profile)}>
                                             LIKEを取り消す
                                         </Button>
                                     </div>
@@ -109,7 +119,7 @@ const Choice = (props) => {
                                 )}
                             </Grid>
                         </Grid>
-                    </Paper>
+                    </Card>
                 ))}
                 <Box sx={{ mt: 2 }}>
                     <Link href="/home">

@@ -19,7 +19,7 @@ const Home = (props) => {
                 setMyProfileList(res.data);
             })
             .catch(error => {
-                console.error('Error');
+                console.error(error);
             });
         }, [props.cookies]);
 
@@ -53,19 +53,13 @@ const Home = (props) => {
                             </Link>
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Link href="/favorite">
-                                <Button variant="contained" fullWidth>LIKEした人</Button>
+                            <Link href="/matching">
+                                <Button variant="contained" fullWidth>マッチング成立</Button>
                             </Link>
                         </Grid>
                     </Grid>
                 </Box>
-                <Box sx={{ mt:4 }}>
-                    <Grid item xs={12} sm={6}>
-                        <Link href="/matching">
-                            <Button variant="contained" fullWidth>マッチング成立</Button>
-                        </Link>
-                    </Grid>
-                </Box>
+
                 <Box sx={{ mt:4 }}>
                     <Grid>
                         <Link href="/login">
