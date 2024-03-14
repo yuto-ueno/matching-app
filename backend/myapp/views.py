@@ -182,14 +182,11 @@ class DirectMessageViewSet(ModelViewSet):
     serializer_class = DirectMessageSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(sender=self.request.user)
+        receiver_id = self.request.query_params.get('receiver_id')
+        return self.queryset.filter(Q(sender=self.request.user) & Q(receiver=receiver_id))
 
     def perform_create(self, serializer):
         serializer.save(sender=self.request.user)
-
-    def destroy(self, request, *args, **kwargs):
-        response = {'message': 'Delete DM is not allowed'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class InboxListView(ReadOnlyModelViewSet):
@@ -197,4 +194,5 @@ class InboxListView(ReadOnlyModelViewSet):
     serializer_class = DirectMessageSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(receiver=self.request.user)
+        sender_id = self.request.query_params.get('sender_id')
+        return self.queryset.filter(Q(receiver=self.request.user) & Q(sender=sender_id))

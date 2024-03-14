@@ -26,7 +26,7 @@ class MatchingAdmin(admin.ModelAdmin):
 
 
 class DirectMessageAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'receiver', 'message',)
+    list_display = ('sender', 'receiver', 'message', 'created_at')
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

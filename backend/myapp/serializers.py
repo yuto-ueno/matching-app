@@ -50,5 +50,5 @@ class MatchingSerializer(serializers.ModelSerializer):
 class DirectMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = DirectMessage
-        fields = ('id', 'sender', 'receiver', 'message',)
+        fields = ('id', 'sender', 'receiver', 'message','created_at', )
         extra_kwargs = {'sender': {'read_only': True}}

@@ -95,3 +95,4 @@ class DirectMessage(models.Model):
         on_delete=models.CASCADE, default='',
     )
     message = models.CharField(verbose_name="メッセージ", max_length=200, default='',)
+    created_at = models.DateTimeField("送信時間", auto_now_add=True)

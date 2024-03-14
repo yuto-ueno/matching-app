@@ -40,22 +40,6 @@ const Home = (props) => {
             });
         }, [props.cookies]);
 
-    const handleGoOut = () => {
-        axios
-            .patch(`${apiURL}/api/users/goout/${user}`, {"go_out":true}, {
-                headers: {
-                    Authorization: `JWT ${props.cookies.get("token")}`,
-                },
-            })
-            .then((response) => {
-                console.log("success");
-                setGoOut(true);
-            })
-            .catch((error) => {
-                console.error("Error:")
-            });
-    };
-
     return (
         <div>
             <h1>Home</h1>
@@ -66,13 +50,6 @@ const Home = (props) => {
                     </div>
                 ))}
             </div>
-
-            {goOut ? (
-                <p>外出中です</p>
-            ) : (
-                <button onClick={handleGoOut}>外出ボタン</button>
-            )}
-            <br/>
 
             <Link href="/profile/edit">
                 <Button>プロフィールの編集</Button>
