@@ -46,6 +46,7 @@ const EditProfile = (props) => {
                         setMiddle_school((res.data[0].middle_school))
                         setHigh_school((res.data[0].high_school))
                         setUniversity((res.data[0].university))
+                        console.log(res.data)
                     })
                     .catch(error => {
                         console.error(error);

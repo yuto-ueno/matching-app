@@ -48,7 +48,7 @@ const Home = (props) => {
                 <Box sx={{ mt: 4 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
-                            <Link href="/Choice">
+                            <Link href="/choice">
                                 <Button variant="contained" fullWidth>仲間探し</Button>
                             </Link>
                         </Grid>

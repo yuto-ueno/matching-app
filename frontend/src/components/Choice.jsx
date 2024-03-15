@@ -96,7 +96,7 @@ const Choice = (props) => {
                                     </tr>
                                     <tr>
                                         <th>性別</th>
-                                        <td>{profile.sex}</td>
+                                        <td>{profile.sex === "male" ? "男性" : "女性"}</td>
                                     </tr>
                                     <tr>
                                         <th>趣味</th>
