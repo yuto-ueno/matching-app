@@ -1,4 +1,5 @@
 # マッチングアプリ
+
 ## アプリケーションのイメージ
 ![matching-app](https://github.com/yuto-ueno/matching-app/assets/131337925/434b4670-f52a-47be-8f3a-a31f4455256d)
 
@@ -61,3 +62,7 @@ matching-app
 ### 技術面のアップデート
 ・dockerを利用した開発  
 ・WEBアプリの公開
+
+## 解説ブログ
+詳細は以下の解説ブログをご参照ください
+https://ueccchi.hatenablog.com/entry/2024/03/16/164510?_gl=1*1y779wt*_gcl_au*MjEyODc3NDk4LjE3MDM2OTI0NTA.
