@@ -64,5 +64,5 @@ matching-app
 ・WEBアプリの公開
 
 ## 解説ブログ
-詳細は以下の解説ブログをご参照ください
+詳細は以下の解説ブログをご参照ください  
 https://ueccchi.hatenablog.com/entry/2024/03/16/164510?_gl=1*1y779wt*_gcl_au*MjEyODc3NDk4LjE3MDM2OTI0NTA.
